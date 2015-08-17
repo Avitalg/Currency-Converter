@@ -17,26 +17,31 @@ public class CheckCurrentDate extends Thread {
 			String status = model.parseXML();
 			Logger myLog = view.getMyLog();
 			myLog.info("Checking if file is up to date...");
-			if (status == "First time connection"){
-	    		myLog.info("No internet Connection");
-	    		view.getCurrDate().setText("No internet Connection");
-	    		view.getButton().setEnabled(false);
-	    	}
-	    	else{
-	    		view.getButton().setEnabled(true);
-	    		if (status != "OK"){
-	            	myLog.info("No internet Connection, Using Old File");
+			if (view.getCurrDate().getText() != model.date()){
+				if (status == "First time connection"){
+	    			myLog.info("No internet Connection");
+	    			view.getCurrDate().setText("No internet Connection");
+	    			view.getButton().setEnabled(false);
 	    		}
-    			view.getCurrDate().setText(model.returnDate());
-	   			myLog.info("Last time data was updated on: "+view.getCurrDate().getText());
-	   			String initTable = model.initTable();
-	   			String[] data = initTable.split("\\,");
-	   			if (view.getCurrDate().getText() != "No connection"){
-	    			for (int row = 0; row < view.getTable().getRowCount(); row++){
-	    				view.getTable().setValueAt(data[row], row, 1); 
+	    		else{
+	    			view.getButton().setEnabled(true);
+	    			if (status != "OK"){
+	            		myLog.info("No internet Connection, Using Old File");
 	    			}
-	    		}	    		
-	    	}
+    				view.getCurrDate().setText(model.returnDate());
+	   				myLog.info("Last time data was updated on: "+view.getCurrDate().getText());
+	   				String initTable = model.initTable();
+	   				String[] data = initTable.split("\\,");
+	   				if (view.getCurrDate().getText() != "No connection"){
+	   					for (int row = 0; row < view.getTable().getRowCount(); row++){
+	    					view.getTable().setValueAt(data[row], row, 1); 
+	    				}
+	   				}	    		
+	    		}
+			}
+			else{
+				myLog.info("The file is up to date");
+			}
 			try {
 				Thread.sleep(180000);
 			} 
